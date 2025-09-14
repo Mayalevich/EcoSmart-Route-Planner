@@ -96,7 +96,7 @@ Throughout this project, we gained valuable insights into sustainable transporta
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd HTN_Final
+   cd EcoSmart-Route-Planner
    ```
 
 2. **Start the development server**
@@ -131,7 +131,7 @@ Throughout this project, we gained valuable insights into sustainable transporta
 ## Project Structure
 
 ```
-HTN_Final/
+EcoSmart-Route-Planner/
 ├── index.html              # Main application page
 ├── login.html              # User authentication page
 ├── records.html            # User records and leaderboard
