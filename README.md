@@ -100,9 +100,12 @@ Throughout this project, we gained valuable insights into sustainable transporta
    ```
 
 2. **Start the development server**
-   ```bash
+
+# Option 1: Direct file opening
+   open index.html
+   
+# Option 2: Using Python's built-in server (if you have Python)
    python3 -m http.server 8000
-   ```
 
 3. **Configure API keys** (optional)
    ```bash
