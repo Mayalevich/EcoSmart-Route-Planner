@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoSmart Route Planner</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>🌱 EcoSmart Route Planner</h1>
+                    <p>Find the most sustainable way to get around</p>
+                </div>
+                <div class="header-nav">
+                    <div class="user-info">
+                        <span id="welcome-user">Welcome, User!</span>
+                        <button class="logout-btn btn btn-outline-danger btn-sm" onclick="logout()">
+                            <i class="bi bi-box-arrow-right me-2"></i>Logout
+                        </button>
+                    </div>
+                    <div class="nav-buttons">
+                        <a href="index.html" class="nav-btn active">
+                            <i class="bi bi-house-fill me-2"></i>Home
+                        </a>
+                        <a href="records.html" class="nav-btn">
+                            <i class="bi bi-graph-up me-2"></i>Records
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <label for="start" class="form-label">
+                        <i class="bi bi-geo-alt-fill me-2"></i>From:
+                    </label>
+                    <input type="text" class="form-control" id="start" placeholder="Enter starting location" value="Downtown Toronto">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <label for="end" class="form-label">
+                        <i class="bi bi-geo-alt me-2"></i>To:
+                    </label>
+                    <input type="text" class="form-control" id="end" placeholder="Enter destination" value="University of Toronto">
+                </div>
+                <div class="col-lg-4 col-md-12 d-flex align-items-end">
+                    <button id="calculateBtn" class="calculate-btn w-100">
+                        <i class="bi bi-calculator me-2"></i>Calculate Routes
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <!-- Route Visualization Section -->
+        <div id="map-section" class="map-section" style="display: none;">
+            <h2><i class="bi bi-map me-3"></i>Route Visualization</h2>
+            <div class="map-container">
+                <!-- Route Summary -->
+                <div id="route-visualization" class="route-visualization">
+                    <div class="route-path">
+                        <div class="start-point">
+                            <div class="point-marker start">A</div>
+                            <div class="point-label" id="start-label">Start Location</div>
+                        </div>
+                        <div class="route-line">
+                            <div class="route-distance" id="route-distance">-- km</div>
+                            <div class="route-duration" id="route-duration">-- min</div>
+                        </div>
+                        <div class="end-point">
+                            <div class="point-marker end">B</div>
+                            <div class="point-label" id="end-label">End Location</div>
+                        </div>
+                    </div>
+                    <div class="route-info">
+                        <div class="info-item">
+                            <i class="bi bi-geo-alt"></i>
+                            <span id="route-summary">Route calculated successfully</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-lightning"></i>
+                            <span id="eco-impact">Eco-friendly route options available</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="results" class="results-section" style="display: none;">
+            <h2><i class="bi bi-diagram-3 me-3"></i>Route Comparison</h2>
+            <div class="route-cards">
+                <!-- Route cards will be generated by JavaScript -->
+            </div>
+            
+            <!-- Summary -->
+            <div class="summary">
+                <h3><i class="bi bi-globe me-3"></i>Environmental Impact Summary</h3>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="stat">
+                            <span class="stat-label"><i class="bi bi-cloud-drizzle me-2"></i>Total CO₂ Saved:</span>
+                            <span id="co2Saved" class="stat-value">0 kg</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat">
+                            <span class="stat-label"><i class="bi bi-heart-pulse me-2"></i>Calories Burned:</span>
+                            <span id="caloriesBurned" class="stat-value">0 cal</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat">
+                            <span class="stat-label"><i class="bi bi-currency-dollar me-2"></i>Money Saved:</span>
+                            <span id="moneySaved" class="stat-value">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Section -->
+        <div id="weather-section" class="weather-section" style="display: none;">
+            <h3><i class="bi bi-cloud-sun me-3"></i>Weather Conditions</h3>
+            <div class="weather-grid">
+                <div class="weather-location">
+                    <h4>📍 Start Location</h4>
+                    <div class="weather-main">
+                        <span id="start-weather-icon" class="weather-icon">🌤️</span>
+                        <div class="weather-details">
+                            <div id="start-weather-temp" class="weather-temp">--°C</div>
+                            <div id="start-weather-condition" class="weather-condition">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="weather-location">
+                    <h4>🎯 Destination</h4>
+                    <div class="weather-main">
+                        <span id="end-weather-icon" class="weather-icon">🌤️</span>
+                        <div class="weather-details">
+                            <div id="end-weather-temp" class="weather-temp">--°C</div>
+                            <div id="end-weather-condition" class="weather-condition">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="weather-recommendation" class="weather-recommendation">
+                Check weather conditions before choosing your route.
+            </div>
+        </div>
+
+        <!-- Route Entry Section -->
+        <div id="route-entry-section" class="route-entry-section" style="display: none;">
+            <h3>📝 Log Your Route</h3>
+            <div class="route-entry-form">
+                <div class="entry-info">
+                    <h4>Selected Route: <span id="selected-route-name">None</span></h4>
+                    <div class="route-stats-preview">
+                        <div class="stat-preview">
+                            <span class="stat-label">Distance:</span>
+                            <span id="preview-distance">-- km</span>
+                        </div>
+                        <div class="stat-preview">
+                            <span class="stat-label">CO₂ Saved:</span>
+                            <span id="preview-co2">-- kg</span>
+                        </div>
+                        <div class="stat-preview">
+                            <span class="stat-label">Calories:</span>
+                            <span id="preview-calories">-- cal</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="entry-form">
+                    <div class="form-group">
+                        <label for="route-note">Notes (optional):</label>
+                        <textarea id="route-note" placeholder="Add any notes about your journey..." maxlength="100"></textarea>
+                    </div>
+                    <button id="log-route-btn" class="log-route-btn">🚀 Log This Route</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Tips Section -->
+        <div class="tips-section">
+            <h3>💡 Eco Tips</h3>
+            <div class="tips-grid">
+                <div class="tip">
+                    <span class="tip-icon">🚶‍♂️</span>
+                    <p>Walking burns calories and produces zero emissions!</p>
+                </div>
+                <div class="tip">
+                    <span class="tip-icon">🚲</span>
+                    <p>Cycling is 10x more efficient than walking for longer distances.</p>
+                </div>
+                <div class="tip">
+                    <span class="tip-icon">🚌</span>
+                    <p>Public transport reduces traffic congestion and emissions.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AI Eco-Coach Chat Widget -->
+        <div class="ai-coach-widget">
+            <div class="coach-header">
+                <div class="eco-eve-avatar">
+                    <div class="avatar-icon">🌱</div>
+                    <div class="status-indicator"></div>
+                </div>
+                <div class="coach-info">
+                    <h4>EcoEve</h4>
+                    <span class="status">AI Sustainability Coach</span>
+                    <div class="mood-indicator">
+                        <span class="mood">encouraging</span>
+                    </div>
+                </div>
+                <div class="coach-controls">
+                    <button class="voice-btn" onclick="toggleVoice()" title="Voice Input">🎤</button>
+                    <button class="settings-btn" onclick="openAISettings()" title="AI Settings">⚙️</button>
+                    <button class="test-btn" onclick="testAI()" title="Test AI">🧪</button>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="ai-chat-messages">
+                <div class="ai-message">
+                    <div class="message-avatar">🌱</div>
+                    <div class="message-content">
+                        <span class="message-text">Hi! I'm EcoEve, your AI sustainability coach! Ready to find your perfect eco-friendly route today?</span>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <div class="input-container">
+                    <input type="text" id="ai-chat-input" placeholder="Ask EcoEve anything..." onkeypress="handleChatKeyPress(event)">
+                    <button class="voice-input-btn" onclick="startVoiceInput()" title="Voice Input">🎤</button>
+                    <button class="send-btn" onclick="sendToAI()">Send</button>
+                </div>
+                <div class="quick-actions">
+                    <button class="quick-btn" onclick="askAI('What\'s the best route today?')">Best Route</button>
+                    <button class="quick-btn" onclick="askAI('Give me a challenge!')">Challenge</button>
+                    <button class="quick-btn" onclick="askAI('How am I doing?')">My Progress</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AI Coach System -->
+    <script src="ai-coach.js"></script>
+    <!-- Custom Scripts -->
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
